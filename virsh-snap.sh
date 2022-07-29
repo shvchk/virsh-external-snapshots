@@ -6,6 +6,7 @@ prefix="_pre_"
 
 
 _help() {
+  local script_name
   script_name="$(basename -- "$0")"
 
   printf "%s\n" \
@@ -44,8 +45,9 @@ _die() {
 
 _yes_or_no() {
   echo
+  local yn
   while true; do
-    read -p "$* [ enter + or - ]: " yn < /dev/tty || die "No tty"
+    read -p "$* [ enter + or - ]: " yn < /dev/tty || _die "No tty"
     case "$yn" in
       "+") return 0 ;;
       "-") return 1 ;;
@@ -65,6 +67,7 @@ _create() {
 }
 
 _list() {
+  local f
   for f in "${domain_conf_dir}"/*.xml; do
     f="$(basename -- "$f")"
     [ "${f:0:5}" != "_pre_" ] || continue
@@ -77,6 +80,7 @@ _disk() {
 }
 
 _delete() {
+  local disk disk_dir sudo_cmd
   disk="$(_disk | sed -E 's|[^/]+(.+)|\1|')"
   disk_dir="$(dirname "$disk")"
   sudo_cmd=""
@@ -88,6 +92,7 @@ _delete() {
 
   # We could just rm $disk, but after revert it won't point to the right snapshot disk path,
   # so we construct the right path manually
+  local snap_disk snap_conf snap_parent_conf
   snap_disk="${disk_dir}/${domain}.${name}"
   snap_conf="${domain_conf_dir}/${name}.xml"
   snap_parent_conf="${domain_conf_dir}/${prefix}${name}.xml"
