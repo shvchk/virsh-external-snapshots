@@ -4,29 +4,37 @@ set -euo pipefail
 conf_dir="${HOME}/.local/VM/snapshots"
 prefix="_pre_"
 
-########################################
 
 _help() {
-  echo "Usage: $(basename -- "$0") <action> <domain> [name]"
+  script_name="$(basename -- "$0")"
 
-  printf '%s\n' \
-  '' \
-  'Actions:' \
-  '  create, c         Create snapshot' \
-  '' \
-  '  list, ls, l       List all domain snapshots' \
-  '' \
-  '  disk              Show active disk' \
-  '' \
-  '  revert, rev, r    Revert snapshot and delete it (same as soft-revert + delete)' \
-  '' \
-  '  soft-revert,' \
-  '  srev, sr          Revert snapshot without deleting it (allows unrevert)' \
-  '' \
-  '  unrevert,' \
-  '  unrev, ur         Unrevert snapshot, i.e. make soft-reverted snapshot active again' \
-  '' \
-  '  delete, del, rm   Delete snapshot'
+  printf "%s\n" \
+  "${script_name}: easy to use external snapshots with virsh (disk-only)" \
+  "" \
+  "Usage: $script_name <action> <domain> [snapshot name]" \
+  "" \
+  "" \
+  "Actions:" \
+  "--------" \
+  "create, c           Create snapshot" \
+  "                    If no snapshot name is provided, current date and time is used" \
+  "" \
+  "list, ls, l         List snapshots" \
+  "" \
+  "disk                Show active disk" \
+  "" \
+  "revert, rev, r      Revert snapshot and delete it (same as soft-revert + delete)" \
+  "" \
+  "soft-revert," \
+  "srev, sr            Revert snapshot without deleting it (allows unrevert)" \
+  "" \
+  "unrevert," \
+  "unrev, ur           Unrevert snapshot, i.e. make soft-reverted snapshot active again" \
+  "" \
+  "delete, del, rm     Delete snapshot" \
+  "" \
+  "" \
+  "Snapshots are created without metadata, so they won't be shown with \`virsh snapshot-list\`"
 }
 
 _die() {

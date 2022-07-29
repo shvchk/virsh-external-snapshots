@@ -1,4 +1,4 @@
-## External snapshots with virsh
+## External snapshots with virsh (disk-only)
 
 ### Installation
 
@@ -15,22 +15,28 @@
 ### Usage
 
 ```
-Usage: virsh-snap.sh <action> <domain> [name]
+Usage: virsh-snap.sh <action> <domain> [snapshot name]
+
 
 Actions:
-  create, c         Create snapshot
+--------
+create, c           Create snapshot
+                    If no snapshot name is provided, current date and time is used
 
-  list, ls, l       List all domain snapshots
+list, ls, l         List snapshots
 
-  disk              Show active disk
+disk                Show active disk
 
-  revert, rev, r    Revert snapshot and delete it (same as soft-revert + delete)
+revert, rev, r      Revert snapshot and delete it (same as soft-revert + delete)
 
-  soft-revert,
-  srev, sr          Revert snapshot without deleting it (allows unrevert)
+soft-revert,
+srev, sr            Revert snapshot without deleting it (allows unrevert)
 
-  unrevert,
-  unrev, ur         Unrevert snapshot, i.e. make soft-reverted snapshot active again
+unrevert,
+unrev, ur           Unrevert snapshot, i.e. make soft-reverted snapshot active again
 
-  delete, del, rm   Delete snapshot
+delete, del, rm     Delete snapshot
+
+
+Snapshots are created without metadata, so they won't be shown with `virsh snapshot-list`
 ```
