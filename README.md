@@ -4,7 +4,7 @@
 
 - Download script:
   ```sh
-  wget -qP ~/.local/bin https://github.com/shvchk/virsh-external-snapshots/raw/main/virsh-snap.sh
+  wget -P ~/.local/bin https://github.com/shvchk/virsh-external-snapshots/raw/main/virsh-snap.sh
   ```
 - Make it executable:
   ```sh
