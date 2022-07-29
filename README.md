@@ -2,14 +2,18 @@
 
 ### Installation
 
-```sh
-wget -qP ~/.local/bin https://github.com/shvchk/virsh-external-snapshots/raw/main/virsh-snap.sh
-```
-```sh
-chmod +x ~/.local/bin/virsh-snap.sh
-```
+- Download script:
+  ```sh
+  wget -qP ~/.local/bin https://github.com/shvchk/virsh-external-snapshots/raw/main/virsh-snap.sh
+  ```
+- Make it executable:
+  ```sh
+  chmod +x ~/.local/bin/virsh-snap.sh
+  ```
+
 
 ### Usage
+
 ```
 Usage: virsh-snap.sh <action> <domain> [name]
 
