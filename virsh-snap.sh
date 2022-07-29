@@ -42,6 +42,17 @@ _die() {
   exit 1
 }
 
+_yes_or_no() {
+  echo
+  while true; do
+    read -p "$* [ enter + or - ]: " yn < /dev/tty || die "No tty"
+    case "$yn" in
+      "+") return 0 ;;
+      "-") return 1 ;;
+    esac
+  done
+}
+
 _has_disks() {
   virsh domblklist "$domain" --details | grep -qE 'file\s+disk' || return 1
 }
@@ -77,8 +88,19 @@ _delete() {
 
   # We could just rm $disk, but after revert it won't point to the right snapshot disk path,
   # so we construct the right path manually
-  [ -f "${disk_dir}/${domain}.${name}" ] && $sudo_cmd rm "${disk_dir}/${domain}.${name}"
-  [ -f "${domain_conf_dir}/${name}.xml" ] && rm "${domain_conf_dir}/${name}.xml"
+  snap_disk="${disk_dir}/${domain}.${name}"
+  snap_conf="${domain_conf_dir}/${name}.xml"
+  snap_parent_conf="${domain_conf_dir}/${prefix}${name}.xml"
+
+  if [ "$disk" = "$snap_disk" ]; then
+    echo "Looks like you are deleting snapshot which is currently in use"
+    echo "You won't be able to revert if you delete it"
+    _yes_or_no "Are you sure?" || return
+  fi
+
+  [ -f "$snap_disk" ] && $sudo_cmd rm "$snap_disk"
+  [ -f "$snap_conf" ] && rm "$snap_conf"
+  [ -f "$snap_parent_conf" ] && rm "$snap_parent_conf"
 }
 
 _soft_revert() {
