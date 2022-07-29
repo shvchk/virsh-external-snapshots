@@ -5,6 +5,9 @@
 ```sh
 wget -qP ~/.local/bin https://github.com/shvchk/virsh-external-snapshots/raw/main/virsh-snap.sh
 ```
+```sh
+chmod +x ~/.local/bin/virsh-snap.sh
+```
 
 ### Usage
 ```
