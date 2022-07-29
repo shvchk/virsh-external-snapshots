@@ -9,7 +9,7 @@ _help() {
   script_name="$(basename -- "$0")"
 
   printf "%s\n" \
-  "${script_name}: easy to use external snapshots with virsh (disk-only)" \
+  "${script_name}: easy to use external snapshots (disk-only)" \
   "" \
   "Usage: $script_name <action> <domain> [snapshot name]" \
   "" \

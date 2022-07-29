@@ -1,4 +1,4 @@
-## virsh-snap.sh: virsh external snapshots (disk-only)
+## virsh-snap.sh: easy to use external snapshots (disk-only)
 
 ### Installation
 
