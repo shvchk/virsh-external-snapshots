@@ -1,4 +1,4 @@
-## virsh-snap.sh: easy to use external snapshots (disk-only)
+## virsh-snap.sh: easy to use external snapshots
 
 ### Installation
 
@@ -36,6 +36,8 @@ unrevert,
 unrev, ur           Unrevert snapshot, i.e. make soft-reverted snapshot active again
 
 delete, del, rm     Delete snapshot
+
+help, h             This message
 
 
 Snapshots are created without metadata, so they won't be shown with `virsh snapshot-list`

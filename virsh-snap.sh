@@ -10,7 +10,7 @@ _help() {
   script_name="$(basename -- "$0")"
 
   printf "%s\n" \
-  "${script_name}: easy to use external snapshots (disk-only)" \
+  "${script_name}: easy to use external snapshots" \
   "" \
   "Usage: $script_name <action> <domain> [snapshot name]" \
   "" \
@@ -33,6 +33,8 @@ _help() {
   "unrev, ur           Unrevert snapshot, i.e. make soft-reverted snapshot active again" \
   "" \
   "delete, del, rm     Delete snapshot" \
+  "" \
+  "help, h             This message" \
   "" \
   "" \
   "Snapshots are created without metadata, so they won't be shown with \`virsh snapshot-list\`"
