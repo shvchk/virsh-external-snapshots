@@ -72,12 +72,20 @@ _get_disk_path() {
 _create() {
   _has_disks || _die "'${domain}' has no disks, nothing to snapshot"
 
-  virsh dumpxml "$domain" > "${domain_conf_dir}/${prefix}${name}.xml"
-  echo "Base disk: $(_get_disk_path)"
+  local base_disk snap_disk base_conf snap_conf
+  base_disk="$(_get_disk_path)"
+  snap_disk="${base_disk%.*}.${name}" # expected
+  base_conf="${domain_conf_dir}/${prefix}${name}.xml"
+  snap_conf="${domain_conf_dir}/${name}.xml"
 
+  [ ! -e "$snap_disk" ] || _die "Disk '$snap_disk' already exist"
+  [ ! -e "$snap_conf" ] || _die "Snapshot conf '$snap_conf' already exist"
+
+  virsh dumpxml "$domain" > "$base_conf"
   virsh snapshot-create-as "$domain" "$name" --disk-only --no-metadata --atomic
+  virsh dumpxml "$domain" > "$snap_conf"
 
-  virsh dumpxml "$domain" > "${domain_conf_dir}/${name}.xml"
+  echo "Base disk: $base_disk"
   echo "Overlay disk: $(_get_disk_path)"
 }
 
@@ -98,11 +106,6 @@ _delete() {
   disk_dir="$(dirname "$disk")"
   sudo_cmd=""
 
-  if [ ! -w "$disk_dir" ] || [ ! -x "$disk_dir" ]; then
-    sudo_cmd="sudo"
-    echo "Root privileges required to remove disk file"
-  fi
-
   # We could just rm $disk, but after revert it won't point to the right snapshot disk path,
   # so we construct the right path manually
   local snap_disk snap_conf snap_parent_conf
@@ -114,6 +117,11 @@ _delete() {
     echo "Looks like you are deleting snapshot which is currently in use"
     echo "You won't be able to revert if you delete it"
     _yes_or_no "Are you sure?" || return
+  fi
+
+  if [ ! -w "$disk_dir" ] || [ ! -x "$disk_dir" ]; then
+    sudo_cmd="sudo"
+    echo "Root privileges required to remove disk file '$snap_disk'"
   fi
 
   [ -f "$snap_disk" ] && $sudo_cmd rm "$snap_disk"
@@ -165,7 +173,7 @@ case "$action" in
     ;;
 
   disk)
-    _disk
+    _get_disk_path
     ;;
 
   delete|del|rm)
