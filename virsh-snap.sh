@@ -65,11 +65,20 @@ _has_disks() {
   virsh domblklist "$domain" --details | grep -qE 'file\s+disk' || return 1
 }
 
+_get_disk_path() {
+  virsh domblklist "$domain" --details | grep -E -m 1 'file\s+disk' | sed -E 's|[^/]+(.+)|\1|'
+}
+
 _create() {
   _has_disks || _die "'${domain}' has no disks, nothing to snapshot"
+
   virsh dumpxml "$domain" > "${domain_conf_dir}/${prefix}${name}.xml"
+  echo "Base disk: $(_get_disk_path)"
+
   virsh snapshot-create-as "$domain" "$name" --disk-only --no-metadata --atomic
+
   virsh dumpxml "$domain" > "${domain_conf_dir}/${name}.xml"
+  echo "Overlay disk: $(_get_disk_path)"
 }
 
 _list() {
@@ -81,15 +90,11 @@ _list() {
   done
 }
 
-_disk() {
-  virsh domblklist "$domain" --details | grep -E -m 1 'file\s+disk'
-}
-
 _delete() {
   _die_on_auto_name
 
   local disk disk_dir sudo_cmd
-  disk="$(_disk | sed -E 's|[^/]+(.+)|\1|')"
+  disk="$(_get_disk_path)"
   disk_dir="$(dirname "$disk")"
   sudo_cmd=""
 
