@@ -1,4 +1,4 @@
-## virsh-snap.sh: easy to use external snapshots
+## virsh-snap.sh: create and revert external libvirt snapshots easily
 
 ### Installation
 
@@ -54,7 +54,7 @@
   virsh-snap.sh help
   ```
   ```
-  virsh-snap.sh: easy to use external snapshots
+  virsh-snap.sh: create and revert external libvirt snapshots easily
 
   Usage: virsh-snap.sh <action> <domain> [snapshot name]
 

@@ -10,7 +10,7 @@ _help() {
   script_name="$(basename -- "$0")"
 
   printf "%s\n" \
-  "${script_name}: easy to use external snapshots" \
+  "${script_name}: create and revert external libvirt snapshots easily" \
   "" \
   "Usage: $script_name <action> <domain> [snapshot name]" \
   "" \
