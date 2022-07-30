@@ -57,6 +57,10 @@ _yes_or_no() {
   done
 }
 
+_die_on_auto_name() {
+  [ "$auto_name" = false ] || _die "No snapshot name provided"
+}
+
 _has_disks() {
   virsh domblklist "$domain" --details | grep -qE 'file\s+disk' || return 1
 }
@@ -82,6 +86,8 @@ _disk() {
 }
 
 _delete() {
+  _die_on_auto_name
+
   local disk disk_dir sudo_cmd
   disk="$(_disk | sed -E 's|[^/]+(.+)|\1|')"
   disk_dir="$(dirname "$disk")"
@@ -111,15 +117,18 @@ _delete() {
 }
 
 _soft_revert() {
+  _die_on_auto_name
   virsh define "${domain_conf_dir}/${prefix}${name}.xml"
 }
 
 _revert() {
+  _die_on_auto_name
   _soft_revert
   _delete
 }
 
 _unrevert() {
+  _die_on_auto_name
   virsh define "${domain_conf_dir}/${name}.xml"
 }
 
@@ -129,10 +138,17 @@ _unrevert() {
 
 action="$1"
 domain="$2"
-name="${3:-$(date +'%Y.%m.%d_%H.%M.%S')}"
 domain_conf_dir="${conf_dir}/${domain}"
-
 [ -d "$domain_conf_dir" ] || mkdir -p "$domain_conf_dir"
+
+if [ -n "${3:-}" ]; then
+  auto_name=false
+  name="$3"
+else
+  auto_name=true
+  name="$(date +'%Y.%m.%d_%H.%M.%S')"
+fi
+
 
 case "$action" in
   create|c)
