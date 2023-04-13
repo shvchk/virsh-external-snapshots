@@ -91,11 +91,13 @@ _create() {
 
 _list() {
   local f
+  shopt -s nullglob
   for f in "${domain_conf_dir}"/*.xml; do
     f="$(basename -- "$f")"
     [ "${f:0:5}" != "_pre_" ] || continue
     echo "${f%.xml}";
   done
+  shopt -u nullglob
 }
 
 _delete() {
@@ -109,7 +111,7 @@ _delete() {
   # We could just rm $disk, but after revert it won't point to the right snapshot disk path,
   # so we construct the right path manually
   local snap_disk snap_conf snap_parent_conf
-  snap_disk="${disk_dir}/${domain}.${name}"
+  snap_disk="${disk%.*}.${name}"
   snap_conf="${domain_conf_dir}/${name}.xml"
   snap_parent_conf="${domain_conf_dir}/${prefix}${name}.xml"
 
