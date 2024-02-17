@@ -66,7 +66,7 @@
 
   list, ls, l         List snapshots
 
-  disk                Show active disk
+  disks                Show active disks
 
   revert, rev, r      Revert snapshot and delete it (same as soft-revert + delete)
 
